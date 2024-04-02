@@ -10,8 +10,14 @@ function App() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [books, setBooks] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [selectedBook, setSelectedBook] = useState(null); // State to hold selected book
   const [isLoading, setIsLoading] = useState({ books: false, categories: false });
   const [error, setError] = useState({ books: null, categories: null });
+
+  // useEffect to log selectedBook when it changes
+  useEffect(() => {
+    console.log(selectedBook);
+  }, [selectedBook]);
 
   const handleShowLibrary = () => {
     setShowLibrary(!showLibrary);
@@ -39,7 +45,7 @@ function App() {
     }
   };
 
-  const getBook = async (id) => {
+  const showBook = async (id) => {
     setIsLoading(prev => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/book/${id}`);
@@ -47,8 +53,7 @@ function App() {
         throw new Error('Failed to fetch book details');
       }
       const data = await response.json();
-      console.log('Book details:', data);
-      // Perform actions with the fetched book details
+      return data;
     } catch (error) {
       console.error('Error fetching book details:', error);
       setError(prev => ({ ...prev, books: error.message }));
@@ -83,7 +88,6 @@ function App() {
       }
       const data = await response.json();
       console.log('Category details:', data);
-      // Perform actions with the fetched category details
     } catch (error) {
       console.error('Error fetching category details:', error);
       setError(prev => ({ ...prev, categories: error.message }));
@@ -107,11 +111,10 @@ function App() {
               showCategories={showCategories}
               getAllBooks={books}
               getAllCategories={categories}
-              getBook={getBook}
+              showBook={showBook} // Pass showBook function, not selectedBook state
               getCategory={getCategory}
             />
           )}
-          {/* Render loading and error messages here based on state */}
         </div>
       </header>
     </div>

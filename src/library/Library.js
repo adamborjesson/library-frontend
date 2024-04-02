@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import App from '../App';
 
 const Library = ({
   onGitHubLibraryClick,
@@ -8,22 +9,28 @@ const Library = ({
   getAllCategories,
   getBook,
   getCategory,
+  showBook // Import showBook prop
 }) => {
+  const [selectedBook, setSelectedBook] = useState(null);
 
-  const handleBookClick = async (book) => {
-    console.log('Book clicked:', book);
+  const handleBookClick = async (bookId) => {
     try {
-      await getBook(book.id);
+      const bookDetails = await showBook(bookId);
+      setSelectedBook(bookDetails);
+      console.log(selectedBook);
     } catch (error) {
       console.error('Error fetching book details:', error);
       // Handle error if needed
     }
   };
 
-  const handleCategoryClick = async (category) => {
-    console.log('Category clicked:', category);
+  // Other parts of your component...
+
+
+
+  const handleCategoryClick = async (categoryId) => {
     try {
-      await getCategory(category.id);
+      await getCategory(categoryId);
     } catch (error) {
       console.error('Error fetching category details:', error);
       // Handle error if needed
@@ -48,28 +55,42 @@ const Library = ({
         Get All Categories
       </button>
       {getAllBooks && (
+        
         <div>
-        <h2>Books:</h2>
-        <ul>
-          {getAllBooks.map((book) => (
-            <li key={book.id}>
-              <button
-                style={{...linkStyle, background: 'none', border: 'none', padding: 0, textAlign: 'left', width: '100%'}}
-                onClick={() => handleBookClick(book)}
-              >
-                {book.name}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
+          {'hej'}
+          <h2>Books:</h2>
+          <ul>
+            {getAllBooks.map((book) => (
+              <li key={book.id}>
+                <button
+                  style={{...linkStyle, background: 'none', border: 'none', padding: 0, textAlign: 'left', width: '100%'}}
+                  onClick={() => handleBookClick(book.id)} 
+                >
+                  {book.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
+      {selectedBook && (
+  <div>
+        {console.log('Selected Book:', selectedBook)}
+
+    <h2>Selected Book:</h2>
+    <p>Name: {selectedBook.name}</p>
+    <p>Category: {selectedBook.category}</p>
+    <p>Copies: {selectedBook.copies}</p>
+    <p>{selectedBook.state}</p>
+  </div>
+)}
+
       {getAllCategories && (
         <div>
           <h2>Categories:</h2>
           <ul>
             {getAllCategories.map((category) => (
-              <li key={category.id} style={{cursor: 'pointer'}} onClick={() => handleCategoryClick(category)}>
+              <li key={category.id} style={{cursor: 'pointer'}} onClick={() => handleCategoryClick(category.id)}>
                 {category.name}
               </li>
             ))}
