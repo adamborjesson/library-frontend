@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import App from '../App';
 
 const Library = ({
+  children,
   onGitHubLibraryClick,
   showBooks,
   showCategories,
@@ -9,13 +10,37 @@ const Library = ({
   getAllCategories,
   getBook,
   getCategory,
-  showBook // Import showBook prop
+  showBook,
+  sellBook,
+  restock
 }) => {
   const [selectedBook, setSelectedBook] = useState(null);
 
   const handleBookClick = async (bookId) => {
     try {
       const bookDetails = await showBook(bookId);
+      setSelectedBook(bookDetails);
+      console.log(selectedBook);
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+      // Handle error if needed
+    }
+  };
+
+  const handleSellBook = async (bookId) => {
+    try {
+      const bookDetails = await sellBook(bookId);
+      setSelectedBook(bookDetails);
+      console.log(selectedBook);
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+      // Handle error if needed
+    }
+  };
+
+  const handleRestock = async (bookId) => {
+    try {
+      const bookDetails = await restock(bookId);
       setSelectedBook(bookDetails);
       console.log(selectedBook);
     } catch (error) {
@@ -54,6 +79,7 @@ const Library = ({
       <button style={linkStyle} onClick={showCategories}>
         Get All Categories
       </button>
+      {children}
       {getAllBooks && (
         
         <div>
@@ -82,6 +108,10 @@ const Library = ({
     <p>Category: {selectedBook.category}</p>
     <p>Copies: {selectedBook.copies}</p>
     <p>{selectedBook.state}</p>
+    <p key={selectedBook.id} onClick={() => handleSellBook(selectedBook.id)} style={{...linkStyle, background: 'none', border: 'none', padding: 0, textAlign: 'center', width: '100%'}}
+>Sell Book</p>
+<p key={selectedBook.id} onClick={() => handleRestock(selectedBook.id)} style={{...linkStyle, background: 'none', border: 'none', padding: 0, textAlign: 'center', width: '100%'}}
+>Restock</p>
   </div>
 )}
 

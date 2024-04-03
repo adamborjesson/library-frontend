@@ -13,6 +13,25 @@ function App() {
   const [selectedBook, setSelectedBook] = useState(null); // State to hold selected book
   const [isLoading, setIsLoading] = useState({ books: false, categories: false });
   const [error, setError] = useState({ books: null, categories: null });
+  const [newBookName, setNewBookName] = useState('');
+  const [newBookCategory, setNewBookCategory] = useState('');
+
+  const handleInputChange = (e) => {
+    setNewBookName(e.target.value);
+  };
+  const bookCategory = (e) => {
+    setNewBookCategory(e.target.value);
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    // Logic to add the new book to the library
+  
+    // Reset input field after submission
+    setNewBookName('');
+    setNewBookCategory('');
+    addBook();
+  };
 
   // useEffect to log selectedBook when it changes
   useEffect(() => {
@@ -45,10 +64,75 @@ function App() {
     }
   };
 
+  const addBook = async () => {
+    const bookName = document.getElementById('newBookName').value;
+  const categoryId = document.getElementById('newBookCategory').value;
+
+  // Create bookData object
+  const bookData = {
+      name: bookName,
+      categoryId: categoryId
+  };
+    setIsLoading(prev => ({ ...prev, books: true }));
+    const apiEndpoint = '/post/book';
+    try {
+      const response = await fetch(`${bookUrl}${apiEndpoint}`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(bookData),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to fetch books');
+      }
+      
+    } catch (error) {
+      console.error('Error fetching books:', error);
+      setError(prev => ({ ...prev, books: error.message }));
+    } finally {
+      setIsLoading(prev => ({ ...prev, books: false }));
+    }
+  };
+
   const showBook = async (id) => {
     setIsLoading(prev => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/book/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch book details');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+      setError(prev => ({ ...prev, books: error.message }));
+    } finally {
+      setIsLoading(prev => ({ ...prev, books: false }));
+    }
+  };
+
+  const sellBook = async (id) => {
+    setIsLoading(prev => ({ ...prev, books: true }));
+    try {
+      const response = await fetch(`${bookUrl}/sell/book/${id}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch book details');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+      setError(prev => ({ ...prev, books: error.message }));
+    } finally {
+      setIsLoading(prev => ({ ...prev, books: false }));
+    }
+  };
+
+  const restock = async (id) => {
+    setIsLoading(prev => ({ ...prev, books: true }));
+    try {
+      const response = await fetch(`${bookUrl}/restock`);
       if (!response.ok) {
         throw new Error('Failed to fetch book details');
       }
@@ -105,17 +189,44 @@ function App() {
             {showLibrary ? 'Hide Library' : 'Show Library'}
           </button>
           {showLibrary && (
-            <Library
-              onGitHubLibraryClick={handleGitHubLibraryClick}
-              showBooks={showBooks}
-              showCategories={showCategories}
-              getAllBooks={books}
-              getAllCategories={categories}
-              showBook={showBook} // Pass showBook function, not selectedBook state
-              getCategory={getCategory}
-            />
-          )}
+  <Library
+    onGitHubLibraryClick={handleGitHubLibraryClick}
+    showBooks={showBooks}
+    showCategories={showCategories}
+    getAllBooks={books}
+    getAllCategories={categories}
+    showBook={showBook}
+    getCategory={getCategory}
+    sellBook={sellBook}
+    restock={restock}
+  >
+    <form onSubmit={handleFormSubmit}>
+      <label htmlFor="newBookName">New Book Name:</label>
+      <input
+        type="text"
+        id="newBookName"
+        value={newBookName}
+        onChange={handleInputChange}
+        required
+      />
+      <label htmlFor="newBookCategory">Category:</label>
+
+      <input
+        type="text"
+        id="newBookCategory"
+        value={newBookCategory}
+        onChange={bookCategory}
+        required
+      />
+      <button type="submit">Add Book</button>
+    </form>
+  </Library>
+)}
+
+          
+         
         </div>
+        
       </header>
     </div>
   );
