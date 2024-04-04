@@ -15,6 +15,7 @@ function App() {
   const [error, setError] = useState({ books: null, categories: null });
   const [newBookName, setNewBookName] = useState('');
   const [newBookCategory, setNewBookCategory] = useState('');
+  const [bookLocal, setBookLocal] = useState('');
 
   const handleInputChange = (e) => {
     setNewBookName(e.target.value);
@@ -129,10 +130,20 @@ function App() {
     }
   };
 
-  const restock = async (id) => {
+  const restock = async (bookId) => {
     setIsLoading(prev => ({ ...prev, books: true }));
     try {
-      const response = await fetch(`${bookUrl}/restock`);
+      const bookData = {
+        id: bookId,
+        copies: 10
+    };
+    const response = await fetch(`${bookUrl}/restock`, {
+      method: 'PUT',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(bookData),
+  });
       if (!response.ok) {
         throw new Error('Failed to fetch book details');
       }

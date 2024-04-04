@@ -42,7 +42,7 @@ const Library = ({
     try {
       const bookDetails = await restock(bookId);
       setSelectedBook(bookDetails);
-      console.log(selectedBook);
+      //console.log(selectedBook.name);
     } catch (error) {
       console.error('Error fetching book details:', error);
       // Handle error if needed
