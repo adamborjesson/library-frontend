@@ -64,14 +64,7 @@ const Library = ({
 
   return (
     <div>
-      <button style={linkStyle} onClick={() => onGitHubLibraryClick('School-Api')}>
-        School-Api
-      </button>
-      <br />
-      <button style={linkStyle} onClick={() => onGitHubLibraryClick('Movies')}>
-        Movies
-      </button>
-      <br />
+      
       <button style={linkStyle} onClick={showBooks}>
         Get All Books
       </button>
