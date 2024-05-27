@@ -1,40 +1,22 @@
+// src/App.js
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Library from './library/Library';
+import Library from './components/library/Library';
 
 const baseUrl = 'https://library-backend.azurewebsites.net/api';
-const bookUrl = baseUrl + '/books';
-const categoryUrl = baseUrl + '/categories';
+const bookUrl = `${baseUrl}/books`;
+const categoryUrl = `${baseUrl}/categories`;
 
 function App() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [books, setBooks] = useState(null);
   const [categories, setCategories] = useState(null);
-  const [selectedBook, setSelectedBook] = useState(null); // State to hold selected book
+  const [selectedBook, setSelectedBook] = useState(null);
   const [isLoading, setIsLoading] = useState({ books: false, categories: false });
   const [error, setError] = useState({ books: null, categories: null });
   const [newBookName, setNewBookName] = useState('');
   const [newBookCategory, setNewBookCategory] = useState('');
-  const [bookLocal, setBookLocal] = useState('');
 
-  const handleInputChange = (e) => {
-    setNewBookName(e.target.value);
-  };
-  const bookCategory = (e) => {
-    setNewBookCategory(e.target.value);
-  };
-
-  const handleFormSubmit = (event) => {
-    event.preventDefault();
-    // Logic to add the new book to the library
-  
-    // Reset input field after submission
-    setNewBookName('');
-    setNewBookCategory('');
-    addBook();
-  };
-
-  // useEffect to log selectedBook when it changes
   useEffect(() => {
     console.log(selectedBook);
   }, [selectedBook]);
@@ -49,7 +31,7 @@ function App() {
   };
 
   const showBooks = async () => {
-    setIsLoading(prev => ({ ...prev, books: true }));
+    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/all`);
       if (!response.ok) {
@@ -59,45 +41,39 @@ function App() {
       setBooks(data);
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError(prev => ({ ...prev, books: error.message }));
+      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, books: false }));
+      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const addBook = async () => {
-    const bookName = document.getElementById('newBookName').value;
-  const categoryId = document.getElementById('newBookCategory').value;
-
-  // Create bookData object
-  const bookData = {
-      name: bookName,
-      categoryId: categoryId
-  };
-    setIsLoading(prev => ({ ...prev, books: true }));
-    const apiEndpoint = '/post/book';
+    const bookData = {
+      name: newBookName,
+      categoryId: newBookCategory,
+    };
+    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
-      const response = await fetch(`${bookUrl}${apiEndpoint}`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(bookData),
+      const response = await fetch(`${bookUrl}/post/book`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookData),
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch books');
+        throw new Error('Failed to add book');
       }
-      
     } catch (error) {
-      console.error('Error fetching books:', error);
-      setError(prev => ({ ...prev, books: error.message }));
+      console.error('Error adding book:', error);
+      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, books: false }));
+      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const showBook = async (id) => {
-    setIsLoading(prev => ({ ...prev, books: true }));
+    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/book/${id}`);
       if (!response.ok) {
@@ -107,26 +83,26 @@ function App() {
       return data;
     } catch (error) {
       console.error('Error fetching book details:', error);
-      setError(prev => ({ ...prev, books: error.message }));
+      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, books: false }));
+      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const sellBook = async (id) => {
-    setIsLoading(prev => ({ ...prev, books: true }));
+    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/sell/book/${id}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch book details');
+        throw new Error('Failed to sell book');
       }
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching book details:', error);
-      setError(prev => ({ ...prev, books: error.message }));
+      console.error('Error selling book:', error);
+      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, books: false }));
+      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
@@ -158,7 +134,7 @@ function App() {
   };
 
   const showCategories = async () => {
-    setIsLoading(prev => ({ ...prev, categories: true }));
+    setIsLoading((prev) => ({ ...prev, categories: true }));
     try {
       const response = await fetch(`${categoryUrl}/get/all`);
       if (!response.ok) {
@@ -168,76 +144,77 @@ function App() {
       setCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      setError(prev => ({ ...prev, categories: error.message }));
+      setError((prev) => ({ ...prev, categories: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, categories: false }));
+      setIsLoading((prev) => ({ ...prev, categories: false }));
     }
   };
 
   const getCategory = async (id) => {
-    setIsLoading(prev => ({ ...prev, categories: true }));
+    setIsLoading((prev) => ({ ...prev, categories: true }));
     try {
       const response = await fetch(`${categoryUrl}/get/category/${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch category details');
       }
       const data = await response.json();
-      console.log('Category details:', data);
+      return data;
     } catch (error) {
       console.error('Error fetching category details:', error);
-      setError(prev => ({ ...prev, categories: error.message }));
+      setError((prev) => ({ ...prev, categories: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, categories: false }));
+      setIsLoading((prev) => ({ ...prev, categories: false }));
     }
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Library</h1>
-        <div>
-          <button className='library' onClick={handleShowLibrary}>
-            {showLibrary ? 'Hide Library' : 'Show Library'}
-          </button>
-          {showLibrary && (
-  <Library
-    onGitHubLibraryClick={handleGitHubLibraryClick}
-    showBooks={showBooks}
-    showCategories={showCategories}
-    getAllBooks={books}
-    getAllCategories={categories}
-    showBook={showBook}
-    getCategory={getCategory}
-    sellBook={sellBook}
-    restock={restock}
-  >
-    <form onSubmit={handleFormSubmit}>
-      <label htmlFor="newBookName">New Book Name:</label>
-      <input
-        type="text"
-        id="newBookName"
-        value={newBookName}
-        onChange={handleInputChange}
-        required
-      />
-      <label htmlFor="newBookCategory">Category:</label>
-
-      <input
-        type="text"
-        id="newBookCategory"
-        value={newBookCategory}
-        onChange={bookCategory}
-        required
-      />
-      <button type="submit">Add Book</button>
-    </form>
-  </Library>
-)}
-
-          
-         
-        </div>
-        
+        <h1>Library App</h1>
+        <button onClick={handleShowLibrary}>
+          {showLibrary ? 'Hide Library' : 'Show Library'}
+        </button>
+        {showLibrary && (
+          <Library
+            onGitHubLibraryClick={handleGitHubLibraryClick}
+            showBooks={showBooks}
+            showCategories={showCategories}
+            getAllBooks={books}
+            getAllCategories={categories}
+            showBook={showBook}
+            getCategory={getCategory}
+            sellBook={sellBook}
+            restock={restock}
+          >
+            <div>
+              <h2>Add a New Book</h2>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  addBook();
+                }}
+              >
+                <label>
+                  Book Name:
+                  <input
+                    type="text"
+                    value={newBookName}
+                    onChange={(e) => setNewBookName(e.target.value)}
+                  />
+                </label>
+                <label>
+                  Category ID:
+                  <input
+                    type="text"
+                    value={newBookCategory}
+                    onChange={(e) => setNewBookCategory(e.target.value)}
+                  />
+                </label>
+                <button type="submit">Add Book</button>
+              </form>
+            </div>
+          </Library>
+        )}
       </header>
     </div>
   );
