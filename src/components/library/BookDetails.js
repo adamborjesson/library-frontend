@@ -5,7 +5,7 @@ const BookDetails = ({ book, onSell, onRestock }) => {
   if (!book) {
     return null;
   }
-
+  console.log(book);
   return (
     <div>
       <h2>Selected Book:</h2>

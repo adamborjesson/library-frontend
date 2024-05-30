@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import BookDetails from './BookDetails';
 import BookList from './BookList';
 import CategoryList from './CategoryList';
+import CategoryDetails from './CategoryDetails'
 
 const Library = ({
   showBooks,
@@ -15,12 +16,14 @@ const Library = ({
   restock,
 }) => {
   const [selectedBook, setSelectedBook] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [visibleComponent, setVisibleComponent] = useState(null);
 
   const handleBookClick = async (bookId) => {
     try {
       const bookDetails = await showBook(bookId);
       setSelectedBook(bookDetails);
+      console.log('&');
       setVisibleComponent('bookDetails');
     } catch (error) {
       console.error('Error fetching book details:', error);
@@ -48,8 +51,9 @@ const Library = ({
 
   const handleCategoryClick = async (categoryId) => {
     try {
-      await getCategory(categoryId);
-      setVisibleComponent('categoryList');
+      const categoryDetails = await getCategory(categoryId);
+      setSelectedCategory(categoryDetails);
+      setVisibleComponent('categoryDetails');
     } catch (error) {
       console.error('Error fetching category details:', error);
     }
@@ -88,6 +92,12 @@ const Library = ({
         <CategoryList
           categories={getAllCategories}
           onCategoryClick={handleCategoryClick}
+        />
+      )}
+      {visibleComponent === 'categoryDetails' && selectedCategory && (
+        <CategoryDetails
+          category={selectedCategory}
+          onBookClick={handleBookClick}
         />
       )}
     </div>
