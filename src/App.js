@@ -11,9 +11,7 @@ function App() {
   const [showLibrary, setShowLibrary] = useState(false);
   const [books, setBooks] = useState(null);
   const [categories, setCategories] = useState(null);
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [isLoading, setIsLoading] = useState({ books: false, categories: false });
-  const [error, setError] = useState({ books: null, categories: null });
+  const [selectedBook] = useState(null);
   const [newBookName, setNewBookName] = useState('');
   const [newBookCategory, setNewBookCategory] = useState('');
 
@@ -31,7 +29,6 @@ function App() {
   };
 
   const showBooks = async () => {
-    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/all`);
       if (!response.ok) {
@@ -41,9 +38,7 @@ function App() {
       setBooks(data);
     } catch (error) {
       console.error('Error fetching books:', error);
-      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
@@ -52,7 +47,6 @@ function App() {
       name: newBookName,
       categoryId: newBookCategory,
     };
-    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/post/book`, {
         method: 'POST',
@@ -66,14 +60,11 @@ function App() {
       }
     } catch (error) {
       console.error('Error adding book:', error);
-      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const showBook = async (id) => {
-    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/get/book/${id}`);
       if (!response.ok) {
@@ -83,14 +74,11 @@ function App() {
       return data;
     } catch (error) {
       console.error('Error fetching book details:', error);
-      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const sellBook = async (id) => {
-    setIsLoading((prev) => ({ ...prev, books: true }));
     try {
       const response = await fetch(`${bookUrl}/sell/book/${id}`);
       if (!response.ok) {
@@ -100,14 +88,11 @@ function App() {
       return data;
     } catch (error) {
       console.error('Error selling book:', error);
-      setError((prev) => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, books: false }));
     }
   };
 
   const restock = async (bookId) => {
-    setIsLoading(prev => ({ ...prev, books: true }));
     try {
       const bookData = {
         id: bookId,
@@ -127,14 +112,11 @@ function App() {
       return data;
     } catch (error) {
       console.error('Error fetching book details:', error);
-      setError(prev => ({ ...prev, books: error.message }));
     } finally {
-      setIsLoading(prev => ({ ...prev, books: false }));
     }
   };
 
   const showCategories = async () => {
-    setIsLoading((prev) => ({ ...prev, categories: true }));
     try {
       const response = await fetch(`${categoryUrl}/get/all`);
       if (!response.ok) {
@@ -144,14 +126,11 @@ function App() {
       setCategories(data);
     } catch (error) {
       console.error('Error fetching categories:', error);
-      setError((prev) => ({ ...prev, categories: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, categories: false }));
     }
   };
 
   const getCategory = async (id) => {
-    setIsLoading((prev) => ({ ...prev, categories: true }));
     try {
       const response = await fetch(`${categoryUrl}/get/category/${id}`);
       if (!response.ok) {
@@ -161,9 +140,7 @@ function App() {
       return data;
     } catch (error) {
       console.error('Error fetching category details:', error);
-      setError((prev) => ({ ...prev, categories: error.message }));
     } finally {
-      setIsLoading((prev) => ({ ...prev, categories: false }));
     }
   };
 
