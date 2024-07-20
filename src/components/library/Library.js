@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import BookDetails from './BookDetails';
 import BookList from './BookList';
 import CategoryList from './CategoryList';
-import CategoryDetails from './CategoryDetails'
+import CategoryDetails from './CategoryDetails';
+import AddBook from './AddBook';
 
 const Library = ({
   showBooks,
@@ -14,16 +15,25 @@ const Library = ({
   getCategory,
   sellBook,
   restock,
+  addBook,
 }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [visibleComponent, setVisibleComponent] = useState(null);
 
+  const newBook = async () => {
+    setVisibleComponent('addbook');
+  };
+
+  const addNewBook = async (newBookName, newBookCategory) => {
+    console.log('Book Added:', { name: newBookName, category: newBookCategory });
+    await addBook(newBookName, newBookCategory);
+  };
+
   const handleBookClick = async (bookId) => {
     try {
       const bookDetails = await showBook(bookId);
       setSelectedBook(bookDetails);
-      console.log('&');
       setVisibleComponent('bookDetails');
     } catch (error) {
       console.error('Error fetching book details:', error);
@@ -78,6 +88,10 @@ const Library = ({
       <button style={linkStyle} onClick={displayCategories}>
         Show Categories
       </button>
+      <br />
+      <button style={linkStyle} onClick={newBook}>
+        Add Book
+      </button>
       {visibleComponent === 'bookList' && getAllBooks && (
         <BookList books={getAllBooks} onBookClick={handleBookClick} />
       )}
@@ -100,6 +114,12 @@ const Library = ({
           onBookClick={handleBookClick}
         />
       )}
+      {visibleComponent === 'addbook' && (
+        <AddBook 
+        categories={getAllCategories} 
+        addNewBook={addNewBook}
+        />
+      )} 
     </div>
   );
 };

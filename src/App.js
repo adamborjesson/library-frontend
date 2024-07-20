@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Library from './components/library/Library';
+import AddBook from './components/library/AddBook';
 
 const baseUrl = 'https://library-backend.azurewebsites.net/api';
 const bookUrl = `${baseUrl}/books`;
@@ -43,7 +44,7 @@ function App() {
     }
   };
 
-  const addBook = async () => {
+  const addBook = async (newBookName, newBookCategory) => {
     const bookData = {
       name: newBookName,
       categoryId: newBookCategory,
@@ -163,6 +164,7 @@ function App() {
             getCategory={getCategory}
             sellBook={sellBook}
             restock={restock}
+            addBook={addBook}
           >
             <div>
               <h2>Add a New Book</h2>

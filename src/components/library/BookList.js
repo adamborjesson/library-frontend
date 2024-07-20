@@ -1,9 +1,17 @@
 // src/components/Library/BookList.js
-import React from 'react';
+import React, {useState} from 'react';
+import AddBook from './AddBook'
 
-const BookList = ({ books, onBookClick }) => {
+const BookList = ({ books, newBookName, newBookCategory, onBookClick }) => {
+  const [visibleComponent, setVisibleComponent] = useState(null);
+
+  const newBook = async () => {
+    setVisibleComponent('addbook');
+  };
   return (
+    
     <div>
+      
       <h2>Books:</h2>
       <ul>
         {books.map((book) => (
@@ -17,8 +25,15 @@ const BookList = ({ books, onBookClick }) => {
           </li>
         ))}
       </ul>
+      <button style={bookButtonStyle} onClick={newBook}>Add Book</button>
+      {visibleComponent === 'addbook' && (
+        <AddBook/>
+      )}
     </div>
+    
   );
+  
+  
 };
 
 const bookButtonStyle = {

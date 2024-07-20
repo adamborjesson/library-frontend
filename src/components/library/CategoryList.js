@@ -8,13 +8,13 @@ const CategoryList = ({ categories, onCategoryClick }) => {
       <ul>
         {categories.map((category) => (
           <li key={category.id}>
-          <button
-            style={categoryButtonStyle}
-            onClick={() => onCategoryClick(category.id)}
-          >
-            {category.name}
-          </button>
-        </li>
+            <button
+              style={categoryButtonStyle}
+              onClick={() => onCategoryClick(category.id)}
+            >
+              {category.name}
+            </button>
+          </li>
         ))}
       </ul>
     </div>
