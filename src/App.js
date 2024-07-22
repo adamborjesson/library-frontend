@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import Library from './components/library/Library';
 
-const baseUrl = 'https://library-backend.azurewebsites.net/api';
+const baseUrl = 'https://library-api.azurewebsites.net/api';
 const bookUrl = `${baseUrl}/books`;
 const categoryUrl = `${baseUrl}/categories`;
 
