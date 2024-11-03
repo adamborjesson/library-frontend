@@ -5,6 +5,9 @@ import BookList from './BookList';
 import CategoryList from './CategoryList';
 import CategoryDetails from './CategoryDetails';
 import AddBook from './AddBook';
+import Spinner from './spinner/Spinner';
+import './spinner/Spinner.css';
+
 
 const Library = ({
   showBooks,
@@ -22,6 +25,8 @@ const Library = ({
   const [visibleComponent, setVisibleComponent] = useState(null);
 
   const newBook = async () => {
+    await showCategories();
+
     setVisibleComponent('addbook');
   };
 

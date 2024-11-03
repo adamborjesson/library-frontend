@@ -2,6 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import Library from './components/library/Library';
+import Spinner from './components/library/spinner/Spinner';
+import './components/library/spinner/Spinner.css';
+
 
 const baseUrl = 'https://library-backend.azurewebsites.net/api';
 const bookUrl = `${baseUrl}/books`;
@@ -15,6 +18,8 @@ function App() {
   const [selectedBook] = useState(null);
   const [newBookName, setNewBookName] = useState('');
   const [newBookCategory, setNewBookCategory] = useState('');
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
     console.log(selectedBook);
@@ -30,6 +35,7 @@ function App() {
   };
 
   const showBooks = async () => {
+    setLoading(true); // Show spinner
     try {
       const response = await fetch(`${bookUrl}/get/all`);
       if (!response.ok) {
@@ -40,10 +46,14 @@ function App() {
     } catch (error) {
       console.error('Error fetching books:', error);
     } finally {
+      setLoading(false); // Hide spinner
     }
   };
 
   const addBook = async (newBookName, newBookCategory) => {
+    setLoading(true);
+    await fetch(`${categoryUrl}/get/all`);
+    await fetch(`${bookUrl}/get/all`);
     const bookData = {
       name: newBookName,
       categoryId: newBookCategory,
@@ -62,10 +72,12 @@ function App() {
     } catch (error) {
       console.error('Error adding book:', error);
     } finally {
+      setLoading(false);
     }
   };
 
   const showBook = async (id) => {
+    setLoading(true);
     try {
       const response = await fetch(`${bookUrl}/get/book/${id}`);
       if (!response.ok) {
@@ -76,10 +88,12 @@ function App() {
     } catch (error) {
       console.error('Error fetching book details:', error);
     } finally {
+      setLoading(false);
     }
   };
 
   const sellBook = async (id) => {
+    setLoading(true);
     try {
       const response = await fetch(`${bookUrl}/sell/book/${id}`);
       if (!response.ok) {
@@ -90,10 +104,12 @@ function App() {
     } catch (error) {
       console.error('Error selling book:', error);
     } finally {
+      setLoading(false);
     }
   };
 
   const restock = async (bookId) => {
+    setLoading(true);
     try {
       const bookData = {
         id: bookId,
@@ -114,10 +130,12 @@ function App() {
     } catch (error) {
       console.error('Error fetching book details:', error);
     } finally {
+      setLoading(false);
     }
   };
 
   const showCategories = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${categoryUrl}/get/all`);
       if (!response.ok) {
@@ -128,10 +146,12 @@ function App() {
     } catch (error) {
       console.error('Error fetching categories:', error);
     } finally {
+      setLoading(false);
     }
   };
 
   const getCategory = async (id) => {
+    setLoading(true);
     try {
       const response = await fetch(`${categoryUrl}/get/category/${id}`);
       if (!response.ok) {
@@ -142,6 +162,7 @@ function App() {
     } catch (error) {
       console.error('Error fetching category details:', error);
     } finally {
+      setLoading(false);
     }
   };
 
@@ -152,6 +173,11 @@ function App() {
         <button onClick={handleShowLibrary}>
           {showLibrary ? 'Hide Library' : 'Show Library'}
         </button>
+        {loading ? (
+        <Spinner /> // Show spinner while loading
+      ) : (
+        <div>{}</div>
+      )}
         {showLibrary && (
           <Library
             onGitHubLibraryClick={handleGitHubLibraryClick}
