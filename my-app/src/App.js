@@ -1,5 +1,6 @@
 // src/App.js
 import React, { useState, useEffect } from 'react';
+
 import './App.css';
 import Library from './components/library/Library';
 import Spinner from './components/library/spinner/Spinner';
@@ -19,6 +20,9 @@ function App() {
   const [newBookName, setNewBookName] = useState('');
   const [newBookCategory, setNewBookCategory] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [deleteMessage, setDeleteMessage] = useState('');
+
 
 
   useEffect(() => {
@@ -71,6 +75,24 @@ function App() {
       }
     } catch (error) {
       console.error('Error adding book:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const search = async (bookName) => {
+    console.log(2);
+    setLoading(true);
+    setErrorMessage(''); // Clear previous error message
+    try {
+      const response = await fetch(`${bookUrl}/get/book/by/name/${bookName}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch book details');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      setErrorMessage(`Error fetching book details: ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -134,6 +156,26 @@ function App() {
     }
   };
 
+  const deleteBook = async (bookId) => {
+    setLoading(true);
+    try {
+      const bookData = {
+        id: bookId,
+        copies: 10
+    };
+    const response = await fetch(`${bookUrl}/delete/${bookId}`, {
+      method: 'DELETE'});
+      if (!response.ok) {
+        throw new Error('Failed to fetch book details');
+      }
+      setDeleteMessage(`Deleted`);
+    } catch (error) {
+      console.error('Error fetching book details:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const showCategories = async () => {
     setLoading(true);
     try {
@@ -176,8 +218,15 @@ function App() {
         {loading ? (
         <Spinner /> // Show spinner while loading
       ) : (
-        <div>{}</div>
+        
+          <div></div>
       )}
+      <div>
+            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+          </div>
+      <div>
+          {deleteMessage && <p style={{ color: 'red' }}>{deleteMessage}</p>}
+        </div>
         {showLibrary && (
           <Library
             onGitHubLibraryClick={handleGitHubLibraryClick}
@@ -190,34 +239,10 @@ function App() {
             sellBook={sellBook}
             restock={restock}
             addBook={addBook}
+            search={search}
+            deleteBook={deleteBook}
           >
-            <div>
-              <h2>Add a New Book</h2>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  addBook();
-                }}
-              >
-                <label>
-                  Book Name:
-                  <input
-                    type="text"
-                    value={newBookName}
-                    onChange={(e) => setNewBookName(e.target.value)}
-                  />
-                </label>
-                <label>
-                  Category ID:
-                  <input
-                    type="text"
-                    value={newBookCategory}
-                    onChange={(e) => setNewBookCategory(e.target.value)}
-                  />
-                </label>
-                <button type="submit">Add Book</button>
-              </form>
-            </div>
+            
           </Library>
         )}
       </header>

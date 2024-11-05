@@ -5,6 +5,7 @@ import BookList from './BookList';
 import CategoryList from './CategoryList';
 import CategoryDetails from './CategoryDetails';
 import AddBook from './AddBook';
+import Search from './Search';
 import Spinner from './spinner/Spinner';
 import './spinner/Spinner.css';
 
@@ -19,10 +20,19 @@ const Library = ({
   sellBook,
   restock,
   addBook,
+  search,
+  deleteBook,
 }) => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [visibleComponent, setVisibleComponent] = useState(null);
+
+  const searchBar = async (bookName) => {
+    console.log(1);
+    const bookDetails = await search(bookName);
+      setSelectedBook(bookDetails);
+      setVisibleComponent('bookDetails');
+  };
 
   const newBook = async () => {
     await showCategories();
@@ -64,6 +74,10 @@ const Library = ({
     }
   };
 
+  const handleDelete = async (bookId) => {
+    await deleteBook(bookId);
+  }
+
   const handleCategoryClick = async (categoryId) => {
     try {
       const categoryDetails = await getCategory(categoryId);
@@ -84,6 +98,10 @@ const Library = ({
     setVisibleComponent('categoryList');
   };
 
+  const searchBook = async () => {
+    setVisibleComponent('search');
+  };
+
   return (
     <div>
       <button style={linkStyle} onClick={displayBooks}>
@@ -97,6 +115,10 @@ const Library = ({
       <button style={linkStyle} onClick={newBook}>
         Add Book
       </button>
+      <br/>
+      <button style={linkStyle} onClick={searchBook}>
+        Search Bar
+      </button>
       {visibleComponent === 'bookList' && getAllBooks && (
         <BookList books={getAllBooks} onBookClick={handleBookClick} />
       )}
@@ -105,6 +127,7 @@ const Library = ({
           book={selectedBook}
           onSell={() => handleSellBook(selectedBook.id)}
           onRestock={() => handleRestockBook(selectedBook.id)}
+          onDelete={() => handleDelete(selectedBook.id)}
         />
       )}
       {visibleComponent === 'categoryList' && getAllCategories && (
@@ -125,6 +148,11 @@ const Library = ({
         addNewBook={addNewBook}
         />
       )} 
+      {visibleComponent === 'search' && (
+        <Search
+          searchBar={searchBar}
+        />
+      )}
     </div>
   );
 };

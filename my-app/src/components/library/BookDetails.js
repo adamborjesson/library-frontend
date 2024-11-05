@@ -1,7 +1,7 @@
 // src/components/Library/BookDetails.js
 import React from 'react';
 
-const BookDetails = ({ book, onSell, onRestock }) => {
+const BookDetails = ({ book, onSell, onRestock, onDelete }) => {
   if (!book) {
     return null;
   }
@@ -26,6 +26,13 @@ const BookDetails = ({ book, onSell, onRestock }) => {
         onClick={() => onRestock(book.id)}
       >
         Restock
+      </button>
+      <br/>
+      <button
+        style={linkStyle}
+        onClick={() => onDelete(book.id)}
+      >
+        Delete
       </button>
     </div>
   );
