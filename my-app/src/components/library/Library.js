@@ -76,6 +76,7 @@ const Library = ({
 
   const handleDelete = async (bookId) => {
     await deleteBook(bookId);
+    setSelectedBook(null);
   }
 
   const handleCategoryClick = async (categoryId) => {
