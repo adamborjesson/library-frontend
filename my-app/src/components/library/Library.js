@@ -1,4 +1,3 @@
-// src/components/Library/Library.js
 import React, { useState } from 'react';
 import BookDetails from './BookDetails';
 import BookList from './BookList';
@@ -6,7 +5,6 @@ import CategoryList from './CategoryList';
 import CategoryDetails from './CategoryDetails';
 import AddBook from './AddBook';
 import Search from './Search';
-import Spinner from './spinner/Spinner';
 import './spinner/Spinner.css';
 
 

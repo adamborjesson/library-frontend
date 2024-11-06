@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 
 import './App.css';
@@ -39,7 +38,7 @@ function App() {
   };
 
   const showBooks = async () => {
-    setLoading(true); // Show spinner
+    setLoading(true); 
     try {
       const response = await fetch(`${bookUrl}/get/all`);
       if (!response.ok) {
@@ -50,7 +49,7 @@ function App() {
     } catch (error) {
       console.error('Error fetching books:', error);
     } finally {
-      setLoading(false); // Hide spinner
+      setLoading(false); 
     }
   };
 
@@ -83,7 +82,7 @@ function App() {
   const search = async (bookName) => {
     console.log(2);
     setLoading(true);
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage(''); 
     try {
       const response = await fetch(`${bookUrl}/get/book/by/name/${bookName}`);
       if (!response.ok) {
@@ -216,7 +215,7 @@ function App() {
           {showLibrary ? 'Hide Library' : 'Show Library'}
         </button>
         {loading ? (
-        <Spinner /> // Show spinner while loading
+        <Spinner /> 
       ) : (
         
           <div></div>

@@ -1,4 +1,3 @@
-// src/components/Library/BookList.js
 import React, { useState } from 'react';
 
 const AddBook = ({ categories, addNewBook }) => {
@@ -6,7 +5,6 @@ const AddBook = ({ categories, addNewBook }) => {
   const [newBookCategory, setNewBookCategory] = useState('');
 
   const handleAddBook = async () => {
-    // Implement the logic for adding a new book here
     await addNewBook(newBookName, newBookCategory);
   };
 

@@ -1,4 +1,3 @@
-// src/components/Library/BookDetails.js
 import React from 'react';
 
 const BookDetails = ({ book, onSell, onRestock, onDelete }) => {

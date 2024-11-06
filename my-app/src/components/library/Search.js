@@ -4,7 +4,6 @@ const Search = ({searchBar}) => {
     const [searchName, setSearchName] = useState('');
 
     const handleSearch = async () => {
-        // Implement the logic for adding a new book here
         await searchBar(searchName);
       };
     
